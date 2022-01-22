@@ -27,27 +27,35 @@ Results = confusionmat(cross_validated_model.Y(test(cv)), Predictions);
 %visualizing training set results%
 
 labels = unique(data.Purchased);
-classifier_name = 'K-Nearest Neighbor';
+classifier_name = 'K-Nearest Neigbor (Training Results)';
 
-Age_range = min (data.Age(training(cv)))-1:0.01:max(data.Age(training(cv)))+1;
+Age_range = min(data.Age(training(cv)))-1:0.01:max(data.Age(training(cv)))+1;
 Estimated_salary_range = min(data.EstimatedSalary(training(cv)))-1:0.01:max(data.EstimatedSalary(training(cv)))+1;
+
 [xx1, xx2] = meshgrid(Age_range,Estimated_salary_range);
 XGrid = [xx1(:) xx2(:)];
-
-predictions_meshgrid = predict(cross_validated_model.Trained{1}, XGrid);
-
-gscatter(xx1(:), xx2(:), predictions_meshgrid, 'rgb');
-
+ 
+predictions_meshgrid = predict(cross_validated_model.Trained{1},XGrid);
+ 
+gscatter(xx1(:), xx2(:), predictions_meshgrid,'rgb');
+ 
 hold on
-
-training_data = data (training(cv),:);
-Y = ismember(training_data.Purchased, labels{1});
-
-scatter(training_data.Age(Y), training_data.EstimatedSalary(Y), 'o', 'MarkerEdgeColor', 'black', 'MarkerFaceColor', 'red');
-scatter(training_data.Age(~Y), training_data.EstimatedSalary(~Y), 'o', 'MarkerEdgeColor', 'black', 'MarkerFaceColor', 'green');
-
+ 
+training_data = data(training(cv),:);
+Y = ismember(training_data.Purchased,labels{1});
+ 
+ 
+scatter(training_data.Age(Y),training_data.EstimatedSalary(Y), 'o' , 'MarkerEdgeColor', 'black', 'MarkerFaceColor', 'red');
+scatter(training_data.Age(~Y),training_data.EstimatedSalary(~Y) , 'o' , 'MarkerEdgeColor', 'black', 'MarkerFaceColor', 'green');
+ 
+ 
 xlabel('Age');
 ylabel('Estimated Salary');
+ 
+title(classifier_name);
+legend off, axis tight
+ 
+legend(labels,'Location',[0.45,0.01,0.45,0.05],'Orientation','Horizontal');
 
 title(classifier_name);
 
